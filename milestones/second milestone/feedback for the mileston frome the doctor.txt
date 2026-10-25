@@ -1,0 +1,10 @@
+Good work!
+
+
+
+Clear motivation (reception congestion, elderly and emergency priority), explicit scope and clinical roles.
+
+
+
+-0.25 on C2: kiosk, triage, doctor, pharmacy and hall display modules plus a concurrent queue engine are too large for one semester; define a core release.
+

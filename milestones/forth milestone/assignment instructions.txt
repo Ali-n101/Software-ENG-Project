@@ -1,0 +1,31 @@
+Submit the Software Requirements Specification using the provided SRS template.
+
+
+
+Include, where applicable:
+
+- System purpose and scope
+
+- Stakeholders
+
+- Functional requirements
+
+- Non-functional requirements
+
+- External interfaces
+
+- Constraints
+
+- Assumptions and dependencies
+
+- Requirement prioritization
+
+- Requirement validation considerations
+
+
+
+Requirements should be clear, consistent, and testable.
+
+
+
+Submit one PDF file per group.
