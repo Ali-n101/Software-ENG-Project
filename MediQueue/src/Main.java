@@ -1,5 +1,6 @@
 import Model.*;
 import Services.BookingService;
+import Util.DatabaseConnection;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,8 +10,33 @@ public class Main {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd  hh:mm a");
 
     public static void main(String[] args) {
-        BookingService service = new BookingService();
         Scanner scanner = new Scanner(System.in);
+
+        System.out.println("==================================================");
+        System.out.println("          Database Login Setup");
+        System.out.println("==================================================");
+
+        // طلب بيانات قاعدة البيانات في البداية
+        System.out.print("Enter MySQL Username (e.g. root): ");
+        String dbUser = scanner.nextLine();
+
+        System.out.print("Enter MySQL Password: ");
+        String dbPass = scanner.nextLine();
+
+        DatabaseConnection.setCredentials(dbUser, dbPass);
+
+        // فحص الاتصال قبل البدء
+        try {
+            DatabaseConnection.getConnection().close();
+            System.out.println("Connected to MySQL successfully!\n");
+        } catch (Exception e) {
+            System.out.println("[Connection Error]: " + e.getMessage());
+            System.out.println("Failed to connect. Exiting...");
+            return;
+        }
+
+        // بدء تشغيل مسار الحجز
+        BookingService service = new BookingService();
 
         System.out.println("==================================================");
         System.out.println("     MediQueue Reception Kiosk - Testing");
