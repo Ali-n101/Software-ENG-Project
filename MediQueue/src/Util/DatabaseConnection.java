@@ -6,9 +6,18 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/mediqueue?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String USER = "root";
-    private static final String PASSWORD = "@Aa112233" ;
+    private static String user;
+    private static String password;
+
+    public static void setCredentials(String dbUser, String dbPassword) {
+        user = dbUser;
+        password = dbPassword;
+    }
+
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        if (user == null || password == null) {
+            throw new SQLException("Database credentials are not set.");
+        }
+        return DriverManager.getConnection(URL, user, password);
     }
 }
