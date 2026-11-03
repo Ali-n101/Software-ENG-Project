@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Local database credentials: keep real passwords here, never in Git
+db.properties
+*.env
+.env
+
+# IDE and build output
+.idea/
+*.iml
+.vscode/
+out/
+target/
+bin/
