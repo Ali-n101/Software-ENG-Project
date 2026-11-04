@@ -33,7 +33,7 @@ public class BookingService {
                     .orElseThrow(() -> new Exception("تعذر استرجاع تفاصيل الحجز."));
         } catch (IllegalStateException e) {
             // FR-11
-            throw new Exception("هذا الوقت لم يعد متاحاً، الرجاء اختيار وقت آخر.");
+            throw new SlotUnavailableException("هذا الوقت لم يعد متاحاً، الرجاء اختيار وقت آخر.");
         }
     }
 }

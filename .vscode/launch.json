@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "MediQueue Kiosk (GUI)",
+            "request": "launch",
+            "mainClass": "MainApp",
+            "vmArgs": "--module-path \"${workspaceFolder}/MediQueue/lib/javafx\" --add-modules javafx.controls --enable-native-access=javafx.graphics",
+            "classPaths": [
+                "$Auto",
+                "${workspaceFolder}/MediQueue/bin",
+                "${workspaceFolder}/MediQueue/mysql-connector-j-26.10.0.jar"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "MediQueue (Console)",
+            "request": "launch",
+            "mainClass": "Main",
+            "console": "integratedTerminal",
+            "classPaths": [
+                "$Auto",
+                "${workspaceFolder}/MediQueue/bin",
+                "${workspaceFolder}/MediQueue/mysql-connector-j-26.10.0.jar"
+            ]
+        }
+    ]
+}

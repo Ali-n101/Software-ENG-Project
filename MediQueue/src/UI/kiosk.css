@@ -1,0 +1,175 @@
+/* MediQueue kiosk theme: calm clinical teal, large touch targets. */
+.root {
+    -fx-font-family: "Segoe UI", "Tahoma", "Arial";
+    -fx-font-size: 16px;
+    -fx-background-color: #F3F6F5;
+}
+
+/* ---------- Top bar ---------- */
+.topbar {
+    -fx-background-color: #0E6B5C;
+    -fx-padding: 16 36;
+    -fx-spacing: 16;
+    -fx-alignment: center-left;
+}
+.logo {
+    -fx-background-color: white;
+    -fx-text-fill: #0E6B5C;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-min-width: 48; -fx-min-height: 48;
+    -fx-background-radius: 12;
+    -fx-alignment: center;
+}
+.brand { -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; }
+.brand-sub { -fx-text-fill: #CFE7E2; -fx-font-size: 14px; }
+.step {
+    -fx-text-fill: #A9D3CB;
+    -fx-font-size: 14px;
+    -fx-padding: 7 14;
+    -fx-background-radius: 999;
+}
+.step-done { -fx-text-fill: white; }
+.step-active { -fx-background-color: white; -fx-text-fill: #0E6B5C; -fx-font-weight: bold; }
+
+/* ---------- Page ---------- */
+.content { -fx-padding: 32 48 12 48; -fx-spacing: 24; }
+.h1 { -fx-font-size: 34px; -fx-font-weight: bold; -fx-text-fill: #12312E; }
+.h1-ar { -fx-font-size: 21px; -fx-text-fill: #5B6F6C; }
+.lead { -fx-font-size: 19px; -fx-text-fill: #12312E; }
+.muted { -fx-text-fill: #5B6F6C; -fx-font-size: 16px; }
+.hint { -fx-text-fill: #8A9B98; -fx-font-size: 13px; }
+.section { -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #5B6F6C; }
+.field-label { -fx-font-size: 16px; -fx-text-fill: #12312E; }
+.footer {
+    -fx-padding: 16 48 26 48;
+    -fx-spacing: 14;
+    -fx-alignment: center-left;
+    -fx-border-color: #DCE5E3 transparent transparent transparent;
+}
+.selection { -fx-font-size: 16px; -fx-text-fill: #12312E; -fx-font-weight: bold; -fx-padding: 0 8 0 0; }
+
+.panel {
+    -fx-background-color: white;
+    -fx-background-radius: 18;
+    -fx-border-color: #DCE5E3;
+    -fx-border-radius: 18;
+    -fx-padding: 28;
+}
+.empty-title { -fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #12312E; -fx-text-alignment: center; }
+
+/* ---------- Buttons ---------- */
+.btn-primary {
+    -fx-background-color: #0E6B5C;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 14 34;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+.btn-primary:hover { -fx-background-color: #0A5246; }
+.btn-primary:pressed { -fx-background-color: #083F36; }
+.btn-primary:disabled { -fx-opacity: 0.45; }
+
+.btn-secondary {
+    -fx-background-color: white;
+    -fx-text-fill: #12312E;
+    -fx-border-color: #B9C9C6;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-font-size: 16px;
+    -fx-padding: 13 26;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover { -fx-background-color: #E3F1EE; }
+
+/* ---------- Inputs ---------- */
+.form-field, .id-field {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-border-color: #B9C9C6;
+    -fx-border-radius: 12;
+    -fx-padding: 10 14;
+    -fx-font-size: 17px;
+}
+.id-field {
+    -fx-font-size: 34px;
+    -fx-font-family: "Consolas", "Courier New";
+    -fx-padding: 14 18;
+}
+.form-field:focused, .id-field:focused { -fx-border-color: #0E6B5C; -fx-border-width: 2; }
+
+.key {
+    -fx-background-color: white;
+    -fx-border-color: #DCE5E3;
+    -fx-border-radius: 14;
+    -fx-background-radius: 14;
+    -fx-font-size: 26px;
+    -fx-text-fill: #12312E;
+    -fx-min-width: 100; -fx-min-height: 74;
+    -fx-cursor: hand;
+}
+.key:hover { -fx-background-color: #E3F1EE; }
+.key:pressed { -fx-background-color: #CFE7E2; }
+.key-fn { -fx-font-size: 17px; -fx-text-fill: #5B6F6C; }
+
+.error-banner {
+    -fx-background-color: #FCEDEC;
+    -fx-text-fill: #B3261E;
+    -fx-border-color: #F2C6C2;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12 16;
+    -fx-font-size: 15px;
+}
+
+/* ---------- Clinics ---------- */
+.clinic-card {
+    -fx-background-color: white;
+    -fx-border-color: #DCE5E3;
+    -fx-border-radius: 18;
+    -fx-background-radius: 18;
+    -fx-padding: 24;
+    -fx-alignment: top-left;
+    -fx-pref-width: 310; -fx-pref-height: 132;
+    -fx-cursor: hand;
+}
+.clinic-card:hover { -fx-border-color: #0E6B5C; -fx-background-color: #F7FBFA; }
+.card-title { -fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #12312E; }
+.card-sub { -fx-font-size: 14px; -fx-text-fill: #5B6F6C; }
+
+/* ---------- Day & time chips ---------- */
+.day-chip, .time-chip {
+    -fx-background-color: white;
+    -fx-border-color: #DCE5E3;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-text-fill: #12312E;
+    -fx-cursor: hand;
+    -fx-text-alignment: center;
+}
+.day-chip { -fx-padding: 10 20; -fx-font-size: 15px; }
+.time-chip { -fx-min-width: 128; -fx-padding: 14 0; -fx-font-size: 17px; }
+.day-chip:hover, .time-chip:hover { -fx-border-color: #0E6B5C; }
+.day-chip:selected { -fx-background-color: #12312E; -fx-text-fill: white; -fx-border-color: #12312E; }
+.time-chip:selected { -fx-background-color: #0E6B5C; -fx-text-fill: white; -fx-border-color: #0E6B5C; -fx-font-weight: bold; }
+
+/* ---------- Confirmation ---------- */
+.check-circle {
+    -fx-background-color: #0E6B5C;
+    -fx-background-radius: 999;
+    -fx-min-width: 84; -fx-min-height: 84;
+    -fx-max-width: 84; -fx-max-height: 84;
+    -fx-text-fill: white;
+    -fx-font-size: 42px;
+    -fx-alignment: center;
+}
+.ref-label { -fx-font-size: 46px; -fx-font-weight: bold; -fx-text-fill: #0E6B5C; -fx-font-family: "Consolas", "Courier New"; }
+.detail-key { -fx-text-fill: #5B6F6C; -fx-font-size: 15px; }
+.detail-value { -fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #12312E; }
+
+/* ---------- Scroll panes blend into the page ---------- */
+.scroll-pane, .scroll-pane > .viewport { -fx-background-color: transparent; -fx-background: transparent; }
+.scroll-pane { -fx-padding: 2; }
+.chip-scroll { -fx-min-height: 76; }

@@ -9,7 +9,9 @@ db.properties
 # IDE and build output
 .idea/
 *.iml
-.vscode/
 out/
 target/
 bin/
+
+# JavaFX is downloaded automatically by MediQueue/run-gui.bat
+MediQueue/lib/javafx/
