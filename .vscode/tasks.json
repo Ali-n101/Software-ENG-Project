@@ -1,0 +1,12 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Download JavaFX",
+            "type": "shell",
+            "command": "${workspaceFolder}\\MediQueue\\fetch-javafx.bat",
+            "presentation": { "reveal": "silent" },
+            "problemMatcher": []
+        }
+    ]
+}

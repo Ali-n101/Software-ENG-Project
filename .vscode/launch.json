@@ -11,7 +11,8 @@
                 "$Auto",
                 "${workspaceFolder}/MediQueue/bin",
                 "${workspaceFolder}/MediQueue/mysql-connector-j-26.10.0.jar"
-            ]
+            ],
+            "preLaunchTask": "Download JavaFX"
         },
         {
             "type": "java",

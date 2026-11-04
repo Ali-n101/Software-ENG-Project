@@ -1,22 +1,12 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-set FX_VER=25
 set FX_DIR=lib\javafx
 
-rem ---- First run only: download JavaFX (it is not included with the JDK) ----
-if not exist "%FX_DIR%\javafx-controls-%FX_VER%-win.jar" (
-  echo Downloading JavaFX %FX_VER% - first run only...
-  if not exist "%FX_DIR%" mkdir "%FX_DIR%"
-  for %%M in (base graphics controls) do (
-    curl.exe -fL -o "%FX_DIR%\javafx-%%M-%FX_VER%-win.jar" "https://repo1.maven.org/maven2/org/openjfx/javafx-%%M/%FX_VER%/javafx-%%M-%FX_VER%-win.jar"
-    if errorlevel 1 (
-      echo Download of javafx-%%M failed. Check your internet connection.
-      del "%FX_DIR%\javafx-%%M-%FX_VER%-win.jar" 2>nul
-      pause
-      exit /b 1
-    )
-  )
+call fetch-javafx.bat
+if errorlevel 1 (
+  pause
+  exit /b 1
 )
 
 rem ---- Compile ----
