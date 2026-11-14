@@ -1,7 +1,9 @@
 # MediQueue Database
 
-MySQL 8.0+ schema for the kiosk booking prototype, matching the SRS dated 26 Oct 2026
-(patient identification, clinic selection, available times, booking).
+MySQL 8.0+ schema for MediQueue. The kiosk booking part matches the SRS dated 26 Oct 2026
+(patient identification, clinic selection, available times, booking). On top of that it
+has the proposal's staff accounts, doctors, check-in and queue tickets, and clinical
+records; see [Staff, queue and clinical records](#staff-queue-and-clinical-records).
 
 ## Setup
 
@@ -93,8 +95,112 @@ public int book(int slotId, int patientId) throws SlotTakenException, SQLExcepti
 `active_slot_id` is a generated column (`slot_id` while `BOOKED`, `NULL` once `CANCELLED`),
 so a cancelled slot becomes bookable again without deleting history.
 
-## Extending later
+## Staff, queue and clinical records
 
-The proposal's queue, nurse, doctor and pharmacy features are out of scope in the current
-SRS. If they come back, they'd add tables such as `ticket`, `vital_signs`, `staff` and
-`prescription` that reference `patient` and `appointment`; nothing here needs to change.
+These come from the proposal and go beyond the current SRS scope. The kiosk's tables and
+views above are unchanged, so the existing kiosk code keeps working.
+
+```
+staff (1) ──(0..1) doctor >── clinic
+doctor (1) ──< appointment_slot
+patient (1) ──< queue_ticket >── clinic        appointment (1) ──(0..1) queue_ticket
+queue_ticket (1) ──< vital_signs
+queue_ticket (1) ──(0..1) consultation (1) ──< prescription
+```
+
+| Table | Purpose | Key rules |
+|---|---|---|
+| `staff` | Login accounts: admin, receptionist, nurse, doctor, pharmacist | `username` unique; PBKDF2 password hash, never plain text |
+| `doctor` | Staff who see patients, one clinic each | A slot's doctor must work in that slot's clinic |
+| `queue_ticket` | One visit in a clinic's queue for one day; the ticket is the check-in | Numbers like `EMG-001`, unique per day; a booking can be checked in once |
+| `ticket_counter` | Last ticket number per day and type | Used only by `issue_ticket` |
+| `vital_signs` | Blood pressure, pulse and temperature from the nurse | Impossible values (typing mistakes) are rejected |
+| `consultation` | The doctor's diagnosis and notes | One per ticket |
+| `prescription` | One medicine per row | `DISPENSED` needs the pharmacist and the time |
+
+Clinical records hang off the ticket, not the booking, so emergency patients need no booking.
+
+### Procedures
+
+- `issue_ticket(type, patient_id, clinic_id, appointment_id, staff_id, OUT ticket_no)` is
+  the only way to create a ticket.
+  - `APPOINTMENT`: pass the `appointment_id`. The booking must be `BOOKED` and for today.
+  - `EMERGENCY`, `SENIOR` or `WALK_IN`: pass `patient_id` and `clinic_id`, and the
+    receptionist's `staff_id` (or `NULL` at the kiosk).
+  - Prefixes: `EMG`, `SNR`, `APT`, `WLK`. Many kiosks can issue tickets at once without
+    duplicate numbers.
+  - Errors (SQLSTATE `45000`): "No booking for today with this reference",
+    "This booking is already checked in", "Unknown ticket type".
+- `check_in(appointment_id, OUT ticket_no)` is what the kiosk calls. It issues an
+  `APPOINTMENT` ticket only, so patients can't print priority tickets; `EMERGENCY` and
+  `SENIOR` tickets come from staff through `issue_ticket`.
+- `call_next(clinic_id, doctor_id, OUT ticket_no)` marks the next waiting ticket `CALLED`
+  and returns its number, or `NULL` if nobody is waiting. Order: emergency, senior,
+  appointment, walk-in, then first come. Two doctors calling at once get different patients.
+
+Kiosk check-in from Java:
+
+```java
+try (CallableStatement cs = conn.prepareCall("{CALL check_in(?, ?)}")) {
+    cs.setInt(1, appointmentId);
+    cs.registerOutParameter(2, Types.VARCHAR);
+    cs.execute();
+    String ticketNo = cs.getString(2);     // e.g. "APT-003"
+} // SQLException with SQLState "45000": show e.getMessage() to the patient
+```
+
+Two kiosks checking in the same booking at the same instant: one gets the ticket, the
+other gets error 1062 instead of the 45000 message; treat it as "already checked in".
+
+### Views
+
+- `doctor_schedule`: each doctor's slots and who booked them.
+- `queue_board`: today's waiting patients per clinic in calling order (`position`), with
+  the latest vital signs.
+- `hall_display`: called tickets and their rooms for the waiting-hall screen, without
+  patient names.
+- `pharmacy_queue`: prescriptions waiting to be dispensed.
+
+### Accounts
+
+| MySQL user | Used by | Can |
+|---|---|---|
+| `mq_kiosk` | Kiosk app | Read patients, clinics and slots; book; check in through `check_in`; read `hall_display`. Cannot issue priority tickets, read staff or clinical data, or update or delete anything. |
+| `mq_staff` | Staff app | Read everything; add vitals, consultations and prescriptions; dispense; manage staff, clinics and slots; call `issue_ticket` and `call_next`. Cannot delete anything or edit a consultation. |
+
+The staff app checks `staff.role` before each action; the database account is shared.
+Both passwords in `schema.sql` are placeholders: change them on the demo laptop with
+`ALTER USER`, not in the repo.
+
+### Staff login
+
+Demo accounts (all in `seed.sql`): `admin`, `reception1`, `nurse1`, `nurse2`,
+`dr.general`, `dr.peds`, `dr.eye`, `dr.derm`, `pharma1`.
+**Demo only:** they all use the password `MediQueue-Demo-2026`, which is public on GitHub.
+
+To check a login, hash the typed password with the row's salt and iteration count and
+compare (standard Java, no library needed):
+
+```java
+static boolean verify(String typed, String hashHex, String saltHex, int iter) throws Exception {
+    PBEKeySpec spec = new PBEKeySpec(typed.toCharArray(), HexFormat.of().parseHex(saltHex), iter, 256);
+    byte[] actual = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).getEncoded();
+    return MessageDigest.isEqual(actual, HexFormat.of().parseHex(hashHex));
+}
+// SELECT staff_id, role, password_hash, password_salt, password_iter
+// FROM staff WHERE username = ? AND is_active = TRUE
+```
+
+To create a new account, generate a random 16-byte salt, hash with 600000 iterations, and
+store the hex values in `password_hash` and `password_salt`.
+
+### Demo data
+
+`seed.sql` also creates a queue for the day you load it: two booked patients checked in
+(`APT-001`, `APT-002`), a senior walk-in (`SNR-001`) and an emergency (`EMG-001`). The
+emergency has already been called, seen and given two prescriptions, one dispensed.
+
+### Not included yet
+
+Referrals between clinics, a medicine catalogue, reports, and a rule that moves long-waiting
+walk-ins up the queue.
