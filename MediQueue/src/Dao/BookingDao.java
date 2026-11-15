@@ -118,7 +118,7 @@ public class BookingDao {
                             clinicName = rs.getString(i);
                         } else if (col.contains("loc")) {
                             clinicLocation = rs.getString(i);
-                        } else if (col.contains("start") || col.contains("time")) {
+                        } else if (col.equals("start_time") || col.equals("starttime")) {
                             Timestamp ts = rs.getTimestamp(i);
                             if (ts != null) startTime = ts.toLocalDateTime();
                         }
